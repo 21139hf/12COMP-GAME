@@ -17,6 +17,12 @@ function setup(){
     cnv = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
     world.gravity.y = 80;
     
+    platform_1 = new Sprite(SCREEN_WIDTH/2, SCREEN_HEIGHT, SCREEN_WIDTH, 5, 'k');
+    platform_1.color = 'black'
+    platform_1.bounciness = 0;
+    platform_1.friction = 0;
+    
+    
     wallLH  = new Sprite(0, height/2, 8, height, 'k');
     wallLH.color = 'black';
     wallLH.bounciness = 0;
