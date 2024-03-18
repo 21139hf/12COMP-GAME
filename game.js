@@ -45,11 +45,11 @@ function setup(){
     middlePlatform2.friction = 0;
     
     //Walls
-    wallLH  = new Sprite(0, height/2, 8, height*3, 'k');
+    wallLH  = new Sprite(0, height/8, 8, height*3, 'k');
     wallLH.color = 'black';
     wallLH.bounciness = 0;
     wallLH.friction = 0;
-    wallRH  = new Sprite(width, height/2, 8, height*3, 'k');
+    wallRH  = new Sprite(width, height/8, 8, height*3, 'k');
     wallRH.color = 'black';
     wallRH.bounciness = 0;
     wallRH.friction = 0;
@@ -100,7 +100,6 @@ function setup(){
 function draw(){
     background('grey')
     img.resize(25, 25);
-    camera.x = player.x;
     camera.y = player.y;
 }
 
