@@ -5,7 +5,7 @@
 
 
 //Variables
-
+var cooldown = 0;
 
 const SCREEN_WIDTH = 1000;
 const SCREEN_HEIGHT = 500;
@@ -29,7 +29,7 @@ function setup(){
     startPlatform.bounciness = 0;
     startPlatform.friction = 0;
     
-    rightPlatform = new Sprite(SCREEN_WIDTH, SCREEN_HEIGHT/2, SCREEN_WIDTH/4, 5, 'k');
+    rightPlatform = new Sprite(SCREEN_WIDTH, SCREEN_HEIGHT/2, SCREEN_WIDTH/3, 5, 'k');
     rightPlatform.color = 'black'
     rightPlatform.bounciness = 0;
     rightPlatform.friction = 0;
@@ -74,8 +74,9 @@ function setup(){
         else if (event.code === 'ArrowRight') {
             player.vel.x = 5; 
         }
-        else if (event.code === 'ArrowUp') {
-            player.vel.y = -25; 
+        else if (event.code === 'ArrowUp' & cooldown > 0.4) {
+            cooldown = cooldown - cooldown;
+            player.vel.y = -30; 
         }
     });
 
@@ -101,6 +102,8 @@ function draw(){
     background('grey')
     img.resize(25, 25);
     camera.y = player.y;
+    cooldown = cooldown + 0.01;
+    console.log(cooldown);
 }
 
 
