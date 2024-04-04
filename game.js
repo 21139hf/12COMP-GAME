@@ -7,11 +7,22 @@
 //Variables
 var cooldown = 0;
 var lives = 3;
- 
+var newPlat;
+    
 
 const PLAYER_WIDTH = 25;
 const SCREEN_WIDTH = 1000;
 const SCREEN_HEIGHT = 500;
+
+//oplatform creator
+function makePlatform(_length, _x, _y){
+
+    newPlat = new Sprite(_x,_y,_length,5,'k');
+    newPlat.color = 'black'
+    newPlat.bounciness = 0;
+    newPlat.friction = 0;
+    return (newPlat);
+}
 /*******************************************************/
 // setup()
 /*******************************************************/
@@ -21,67 +32,60 @@ function setup(){
     world.gravity.y = 80;
     
     //Ground 
-    ground = new Sprite(SCREEN_WIDTH/2, SCREEN_HEIGHT, SCREEN_WIDTH, 5, 'k');
-    ground.color = 'black'
-    ground.bounciness = 0;
-    ground.friction = 0;
+    ground = makePlatform(SCREEN_WIDTH, SCREEN_WIDTH/2, SCREEN_HEIGHT);
+    
+
     
     // Platforms
-    startPlatform = new Sprite(0, SCREEN_HEIGHT/1.5, SCREEN_WIDTH/4, 5, 'k');
-    startPlatform.color = 'black'
-    startPlatform.bounciness = 0;
-    startPlatform.friction = 0;
+    startPlat = makePlatform( SCREEN_WIDTH/4, 0, SCREEN_HEIGHT/1.5);
+
+    rightPlatform = makePlatform(SCREEN_WIDTH/3, SCREEN_WIDTH, SCREEN_HEIGHT/2);
+
+    middlePlat = makePlatform(100, 350, SCREEN_HEIGHT/2);
     
-    rightPlatform = new Sprite(SCREEN_WIDTH, SCREEN_HEIGHT/2, SCREEN_WIDTH/3, 5, 'k');
-    rightPlatform.color = 'black'
-    rightPlatform.bounciness = 0;
-    rightPlatform.friction = 0;
+    middlePlat2 = makePlatform(200, 600, 350);
+    middlePlat3 = makePlatform(125, 600, 50);
+    firstLVPlat = makePlatform(SCREEN_WIDTH, 0, -100,);
+    spikePlat = makePlatform(50,260, -160);
+    leftPlat = makePlatform(SCREEN_WIDTH/8, 0, -250);
+    leftPlat2 = makePlatform(SCREEN_WIDTH/8, 0, -500);
+    middlePlat4 = makePlatform(SCREEN_WIDTH*1.1,800,-600);
+    rightPlat2 = makePlatform(SCREEN_WIDTH/8,1000,-800);
+    rightPlat3 = makePlatform(SCREEN_WIDTH/8,1000,-1000);
+    littlePlat = makePlatform(50,800,-1100);
+    littlePlat2 = makePlatform(50,600,-1200);
+    littlePLat3 = makePlatform(50,400,-1300);
+    littlePlat4 = makePlatform(50,200,-1400);
+    littlePlat5 = makePlatform(100,0,-1500);
     
-    middlePlatform1 = new Sprite(350, SCREEN_HEIGHT/2, 100, 5, 'k');
-    middlePlatform1.color = 'black'
-    middlePlatform1.bounciness = 0;
-    middlePlatform1.friction = 0;
-    
-    middlePlatform2 = new Sprite(600, 350, 200, 5, 'k');
-    middlePlatform2.color = 'black'
-    middlePlatform2.bounciness = 0;
-    middlePlatform2.friction = 0;
-    
-    middlePlatform3 = new Sprite(600, 50, 125, 5, 'k');
-    middlePlatform3.color = 'black'
-    middlePlatform3.bounciness = 0;
-    middlePlatform3.friction = 0;
-    
-    topPlatform = new Sprite(0, -100, SCREEN_WIDTH, 5, 'k');
-    topPlatform.color = 'black'
-    topPlatform.bounciness = 0;
-    topPlatform.friction = 0;
     
     //Walls
-    wallLH  = new Sprite(0, height/8, 8, height*5, 'k');
+    wallLH  = new Sprite(0, height/8, 8, height*10, 'k');
     wallLH.color = 'black';
     wallLH.bounciness = 0;
     wallLH.friction = 0;
     
-    wallRH  = new Sprite(width, height/8, 8, height*5, 'k');
+    wallRH  = new Sprite(width, height/8, 8, height*10, 'k');
     wallRH.color = 'black';
     wallRH.bounciness = 0;
     wallRH.friction = 0;
     
-    //wallTop = new Sprite(width/2, 0, width, 8, 'k');
-    //wallTop.color = 'black';
-    //wallTop.bounciness = 0;
-    //wallTop.friction = 0;
   
     //Player
     player = new Sprite(100,  SCREEN_HEIGHT/2, PLAYER_WIDTH, PLAYER_WIDTH, 'd');
     player.bounciness = 0;
     player.addImage(img);
 
-    trap = new Sprite(200, -100, 150, 80, 'k');
+    //Trap
+    trap = new Sprite(200, -125, 150, 50, 'k');
     trap.bounciness = 0;
     trap.addImage(img3);
     player.collides(trap, playerHitTrap);
+    
+    trap2 = new Sprite(450, -625, 150, 50, 'k');
+    trap2.bounciness = 0;
+    trap2.addImage(img3);
+    player.collides(trap2, playerHitTrap2);
 
 
     //Keyboard imputs
@@ -127,10 +131,11 @@ function preload() {
 function draw(){
     background('grey')
     img.resize(PLAYER_WIDTH, PLAYER_WIDTH);
-    img3.resize(200, 300);
+    img3.resize(150, 50);
     camera.y = player.y;
     cooldown = cooldown + 0.01;
-    console.log(cooldown);
+    //console.log(cooldown);
+    
     
     for (let i = 0; i<lives;i++){
         image(img2, 35*i, 0);
@@ -139,7 +144,12 @@ function draw(){
 }
 
 function playerHitTrap(_player,_trap){
-    lives--
+    lives--;
+    //Dead code
+}
+
+function playerHitTrap2(_player,_trap2){
+    lives--;
     //Dead code
 }
 
