@@ -8,13 +8,16 @@
 var cooldown = 0;
 var lives = 3;
 var newPlat;
-    
+var time = 0;
+var timeInSeconds = 0;
+var resetTime = 0;
+let screenSelector = "start";
 
 const PLAYER_WIDTH = 25;
 const SCREEN_WIDTH = 1000;
 const SCREEN_HEIGHT = 500;
 
-//oplatform creator
+//Platform creator
 function makePlatform(_length, _x, _y){
 
     newPlat = new Sprite(_x,_y,_length,5,'k');
@@ -31,18 +34,11 @@ function setup(){
     cnv = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
     world.gravity.y = 80;
     
-    //Ground 
+    //Platform 
     ground = makePlatform(SCREEN_WIDTH, SCREEN_WIDTH/2, SCREEN_HEIGHT);
-    
-
-    
-    // Platforms
     startPlat = makePlatform( SCREEN_WIDTH/4, 0, SCREEN_HEIGHT/1.5);
-
     rightPlatform = makePlatform(SCREEN_WIDTH/3, SCREEN_WIDTH, SCREEN_HEIGHT/2);
-
     middlePlat = makePlatform(100, 350, SCREEN_HEIGHT/2);
-    
     middlePlat2 = makePlatform(200, 600, 350);
     middlePlat3 = makePlatform(125, 600, 50);
     firstLVPlat = makePlatform(SCREEN_WIDTH, 0, -100,);
@@ -56,7 +52,7 @@ function setup(){
     littlePlat2 = makePlatform(50,600,-1200);
     littlePLat3 = makePlatform(50,400,-1300);
     littlePlat4 = makePlatform(50,200,-1400);
-    littlePlat5 = makePlatform(100,0,-1500);
+    littlePlat5 = makePlatform(200,0,-1500);
     
     
     //Walls
@@ -71,24 +67,27 @@ function setup(){
     wallRH.friction = 0;
     
   
-    //Player
-    player = new Sprite(100,  SCREEN_HEIGHT/2, PLAYER_WIDTH, PLAYER_WIDTH, 'd');
-    player.bounciness = 0;
-    player.addImage(img);
+
 
     //Trap
     trap = new Sprite(200, -125, 150, 50, 'k');
     trap.bounciness = 0;
     trap.addImage(img3);
-    player.collides(trap, playerHitTrap);
     
     trap2 = new Sprite(450, -625, 150, 50, 'k');
     trap2.bounciness = 0;
     trap2.addImage(img3);
-    player.collides(trap2, playerHitTrap2);
+
+    //Door
+    door = new Sprite(25, -1538, 50, 70, 'k')
+    door.bounciness = 0;
+    door.addImage(img4);
+    
+
+    
 
 
-    //Keyboard imputs
+    //Keyboard Inputs
     document.addEventListener("keydown", function(event) {
         if (event.code === 'ArrowLeft') {
             player.vel.x = -5;
@@ -125,22 +124,48 @@ function preload() {
     img = loadImage('/images/face.png');
     img2 = loadImage('images/heart.png');
     img3 = loadImage('images/spikes.png');
-    
+    img4 = loadImage('images/door.png');
+}
+
+document.addEventListener("keydown", playerInput);
+function playerInput(event) {
+    if(keyCode == 13 && screenSelector == "start"){
+            screenSelector = "game"
+            resetGame();
+        } else if (keyCode == 13 && screenSelector == "end"){
+            screenSelector = "game"
+            resetGame();
+        } else if (keyCode == 13 && screenSelector == "win"){
+            screenSelector = "game"
+            resetGame();
+        }
 }
 
 function draw(){
-    background('grey')
+    if(screenSelector=="game"){
+        gameScreen();
+    }else if(screenSelector=="end"){
+        endScreen();
+    }else if(screenSelector=="win"){
+        winScreen();
+    }else if(screenSelector=="start"){
+        startScreen();
+        //Display screen selector
+    console.log("Start screen")
+    }else{
+        text("wrong screen - you shouldnt get here", 50, 50);
+        console.log("wrong screen - you shouldnt get here")
+    }
+    
     img.resize(PLAYER_WIDTH, PLAYER_WIDTH);
     img3.resize(150, 50);
-    camera.y = player.y;
+    img4.resize(50, 70);
+    
     cooldown = cooldown + 0.01;
     //console.log(cooldown);
     
     
-    for (let i = 0; i<lives;i++){
-        image(img2, 35*i, 0);
-        
-    }
+    
 }
 
 function playerHitTrap(_player,_trap){
@@ -153,21 +178,127 @@ function playerHitTrap2(_player,_trap2){
     //Dead code
 }
 
+function checkIfDead(){
+    if(lives == 0){
+        console.log("YouDied");
+        screenSelector = "end";
+        allSprites.visible = false;
+        player.remove();
+    }
+}
+
+function checkIfPlayerHitDoor(){
+    if(player.collides(door, checkIfPlayerHitDoor)){
+        screenSelector = "win";
+        allSprites.visible = false;
+        player.remove();
+    }
+}
+
+function checkIfPlayerHitLava(){
+    if(player.collides(lava, checkIfPlayerHitLava)){
+        screenSelector = "end";
+        allSprites.visible = false;
+        player.remove();
+    }
+}
+
 
 function startScreen(){
-
+    background('grey');
+    allSprites.visible = false;
+    textSize(32);
+    fill(255);
+    stroke(0);
+    strokeWeight(4);
+    text("Welcome to the Blazing Blits", 50, 50);
+    textSize(24);
+    text("Press enter to start", 50, 100);
+    textSize(24);
+    text("Controls", 50, 150);
+    textSize(24);
+    text("Up arrow to jump", 50, 200);
+    textSize(24);
+    text("Right arrow to move right", 50, 250);
+    textSize(24);
+    text("Left arrow to move left", 50, 300);
+    playerInput();
+    lives = 3;
 }
 
 function gameScreen(){
-       background('grey')
+    background('grey');
+    for (let i = 0; i<lives;i++){
+        image(img2, 35*i, 0);
+    }
+    allSprites.visible = true;
+    time = millis() - resetTime
+    timeInSeconds = time/1000;
+    textSize(32);
+    fill(255);
+    stroke(0);
+    strokeWeight(4);
+    text("Time: " + Math.floor(timeInSeconds) + " seconds", 600, 50);
+    player.collides(door, checkIfPlayerHitDoor);
+    player.collides(lava, checkIfPlayerHitLava);
+    player.collides(trap, playerHitTrap);
+    player.collides(trap2, playerHitTrap2);
+    console.log ("player.collides");
+    console.log (door);
+    camera.y = player.y;
+    player.bounciness = 0;
+    checkIfDead();
+
+
 }
 
+
 function endScreen(){
-    background('white')
+    playerInput();
+    background("grey");
+    console.log("End screen")
+    allSprites.visible = false;
+    textSize(32);
+    fill(255);
+    stroke(0);
+    strokeWeight(4);
+    text("You died! Press enter to try again", 50, 50);
+    //End screen
+}
+
+function winScreen(){
+    playerInput();
+    background("grey");
+    console.log("Win screen")
+    allSprites.visible = false;
+    textSize(32);
+    fill(255);
+    stroke(0);
+    strokeWeight(4);
+    text("You won! Press enter to play again", 50, 50);
+    textSize(24);
+    text("Your time was: "+Math.floor(timeInSeconds) + " seconds",500, 100);
+    //End screen
+    
 }
 
 function resetGame(){
-    background('white')
+    time = 0;
+    resetTime = millis();
+    lives = 3;
+    //Player
+    player = new Sprite(100,  SCREEN_HEIGHT/2, PLAYER_WIDTH, PLAYER_WIDTH, 'd');
+    player.bounciness = 0;
+    player.addImage(img);
+    player.x = 100;
+    player.y = SCREEN_HEIGHT/2;
+    //lava
+    lava = new Sprite (500, 1250, 1000, 500, 'k' );
+    lava.color = "red";
+    lava.vel.y = -2;
+    lava.x = SCREEN_WIDTH/2;
+    lava.y = 1250;
+    //Refresh game 
 }
 
 /*******************************************************/
