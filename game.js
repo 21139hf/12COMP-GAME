@@ -184,6 +184,7 @@ function checkIfDead(){
         screenSelector = "end";
         allSprites.visible = false;
         player.remove();
+        lava.remove();
     }
 }
 
@@ -192,14 +193,16 @@ function checkIfPlayerHitDoor(){
         screenSelector = "win";
         allSprites.visible = false;
         player.remove();
+        lava.remove();
     }
 }
 
 function checkIfPlayerHitLava(){
     if(player.collides(lava, checkIfPlayerHitLava)){
-        screenSelector = "end";
+        lives = 0;
         allSprites.visible = false;
         player.remove();
+        lava.remove();
     }
 }
 
@@ -277,7 +280,7 @@ function winScreen(){
     strokeWeight(4);
     text("You won! Press enter to play again", 50, 50);
     textSize(24);
-    text("Your time was: "+Math.floor(timeInSeconds) + " seconds",500, 100);
+    text("Your time was: "+Math.floor(timeInSeconds) + " seconds",50, 100);
     //End screen
     
 }
@@ -296,8 +299,6 @@ function resetGame(){
     lava = new Sprite (500, 1250, 1000, 500, 'k' );
     lava.color = "red";
     lava.vel.y = -2;
-    lava.x = SCREEN_WIDTH/2;
-    lava.y = 1250;
     //Refresh game 
 }
 
