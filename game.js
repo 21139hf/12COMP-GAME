@@ -121,6 +121,7 @@ function setup(){
 /*******************************************************/
 
 function preload() {
+    //Load image
     img = loadImage('/images/face.png');
     img2 = loadImage('images/heart.png');
     img3 = loadImage('images/spikes.png');
@@ -129,6 +130,7 @@ function preload() {
 
 document.addEventListener("keydown", playerInput);
 function playerInput(event) {
+    //ScreenSelector code 
     if(keyCode == 13 && screenSelector == "start"){
             screenSelector = "game"
             resetGame();
@@ -142,6 +144,7 @@ function playerInput(event) {
 }
 
 function draw(){
+    //Switching between screens 
     if(screenSelector=="game"){
         gameScreen();
     }else if(screenSelector=="end"){
@@ -157,10 +160,11 @@ function draw(){
         console.log("wrong screen - you shouldnt get here")
     }
     
+    //Resize images 
     img.resize(PLAYER_WIDTH, PLAYER_WIDTH);
     img3.resize(150, 50);
     img4.resize(50, 70);
-    
+    //Jump cooldown
     cooldown = cooldown + 0.01;
     //console.log(cooldown);
     
@@ -168,18 +172,19 @@ function draw(){
     
 }
 
-function playerHitTrap(_player,_trap){
+function ifPlayerHitsTrap(_player,_trap){
     lives--;
-    //Dead code
+    //If player hits trap
 }
 
-function playerHitTrap2(_player,_trap2){
+function ifPlayerHitsTrap2(_player,_trap2){
     lives--;
-    //Dead code
+    //If player hits trap
 }
 
 function checkIfDead(){
     if(lives == 0){
+        //If lives are zero you die
         console.log("YouDied");
         screenSelector = "end";
         allSprites.visible = false;
@@ -190,15 +195,18 @@ function checkIfDead(){
 
 function checkIfPlayerHitDoor(){
     if(player.collides(door, checkIfPlayerHitDoor)){
+        //If player hits door you win
         screenSelector = "win";
         allSprites.visible = false;
         player.remove();
         lava.remove();
     }
+
 }
 
 function checkIfPlayerHitLava(){
     if(player.collides(lava, checkIfPlayerHitLava)){
+        //If player hits lava lives are zero
         lives = 0;
         allSprites.visible = false;
         player.remove();
@@ -206,7 +214,7 @@ function checkIfPlayerHitLava(){
     }
 }
 
-
+//Start screen
 function startScreen(){
     background('grey');
     allSprites.visible = false;
@@ -229,12 +237,15 @@ function startScreen(){
     lives = 3;
 }
 
+//Game screen
 function gameScreen(){
     background('grey');
+    //Lives code
     for (let i = 0; i<lives;i++){
         image(img2, 35*i, 0);
     }
     allSprites.visible = true;
+    //Time code
     time = millis() - resetTime
     timeInSeconds = time/1000;
     textSize(32);
@@ -242,12 +253,14 @@ function gameScreen(){
     stroke(0);
     strokeWeight(4);
     text("Time: " + Math.floor(timeInSeconds) + " seconds", 600, 50);
+    //Collision code
     player.collides(door, checkIfPlayerHitDoor);
     player.collides(lava, checkIfPlayerHitLava);
-    player.collides(trap, playerHitTrap);
-    player.collides(trap2, playerHitTrap2);
+    player.collides(trap, ifPlayerHitsTrap);
+    player.collides(trap2, ifPlayerHitsTrap2);
     console.log ("player.collides");
     console.log (door);
+    // Camera follows players y
     camera.y = player.y;
     player.bounciness = 0;
     checkIfDead();
@@ -255,7 +268,7 @@ function gameScreen(){
 
 }
 
-
+//End screen
 function endScreen(){
     playerInput();
     background("grey");
@@ -266,9 +279,9 @@ function endScreen(){
     stroke(0);
     strokeWeight(4);
     text("You died! Press enter to try again", 50, 50);
-    //End screen
 }
 
+//Win screen
 function winScreen(){
     playerInput();
     background("grey");
@@ -281,10 +294,9 @@ function winScreen(){
     text("You won! Press enter to play again", 50, 50);
     textSize(24);
     text("Your time was: "+Math.floor(timeInSeconds) + " seconds",50, 100);
-    //End screen
-    
 }
 
+//Reset game
 function resetGame(){
     time = 0;
     resetTime = millis();
@@ -299,7 +311,7 @@ function resetGame(){
     lava = new Sprite (500, 1250, 1000, 500, 'k' );
     lava.color = "red";
     lava.vel.y = -2;
-    //Refresh game 
+    //Refresh player and lava 
 }
 
 /*******************************************************/
