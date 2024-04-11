@@ -19,7 +19,6 @@ const SCREEN_HEIGHT = 500;
 
 //Platform creator
 function makePlatform(_length, _x, _y){
-
     newPlat = new Sprite(_x,_y,_length,5,'k');
     newPlat.color = 'black'
     newPlat.bounciness = 0;
@@ -43,6 +42,7 @@ function preload() {
 /*******************************************************/
 function setup(){
     console.log("setup: ");
+    //Screen size
     cnv = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
     world.gravity.y = 80;
     
@@ -116,6 +116,7 @@ function setup(){
     });
 }
 
+// When player hits enter on start or end screen start game 
 document.addEventListener("keydown", playerInput);
 function playerInput(event) {
     //ScreenSelector code 
@@ -131,18 +132,24 @@ function playerInput(event) {
         }
 }
 
+// When player loses press r to return to start screen
 document.addEventListener("keydown", playerReturn);
 function playerReturn(event) {
     //ScreenSelector code 
     if (keyCode == 82 && screenSelector == "end"){
+            player.remove();
+            lava.remove();
             screenSelector = "start"
             startScreen();
         } else if (keyCode == 82 && screenSelector == "win"){
+            player.remove();
+            lava.remove();
             screenSelector = "start"
             resetGame();
         }
 }
 
+// Ask user name 
 function askUserName() {
   console.log("askUserName");
   userNameInvalid = true;
@@ -169,6 +176,7 @@ function askUserName() {
 
 askUserName();
 
+// Draw
 function draw(){
     //Switching between screens 
     if(screenSelector=="game"){
@@ -195,16 +203,17 @@ function draw(){
     //console.log(cooldown);
 }
 
+// If player hits trap
 function ifPlayerHitsTrap(_player,_trap){
     lives--;
-    //If player hits trap
 }
 
+// If player hits trap
 function ifPlayerHitsTrap2(_player,_trap2){
     lives--;
-    //If player hits trap
 }
 
+// Check if dead
 function checkIfDead(){
     if(lives == 0){
         //If lives are zero you die
@@ -216,6 +225,7 @@ function checkIfDead(){
     }
 }
 
+// Check if player hits door
 function checkIfPlayerHitDoor(){
     if(player.collides(door, checkIfPlayerHitDoor)){
         //If player hits door you win
@@ -226,6 +236,7 @@ function checkIfPlayerHitDoor(){
     }
 }
 
+// Check if player hits lava
 function checkIfPlayerHitLava(){
     if(player.collides(lava, checkIfPlayerHitLava)){
         //If player hits lava lives are zero
