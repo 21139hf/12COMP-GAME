@@ -41,6 +41,7 @@ function preload() {
 // setup()
 /*******************************************************/
 function setup(){
+    askUserName();
     console.log("setup: ");
     //Screen size
     cnv = new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -137,15 +138,15 @@ document.addEventListener("keydown", playerReturn);
 function playerReturn(event) {
     //ScreenSelector code 
     if (keyCode == 82 && screenSelector == "end"){
-            player.remove();
-            lava.remove();
             screenSelector = "start"
             startScreen();
-        } else if (keyCode == 82 && screenSelector == "win"){
             player.remove();
             lava.remove();
+        } else if (keyCode == 82 && screenSelector == "win"){
             screenSelector = "start"
             resetGame();
+            player.remove();
+            lava.remove();
         }
 }
 
@@ -174,7 +175,6 @@ function askUserName() {
   }
 }
 
-askUserName();
 
 // Draw
 function draw(){
