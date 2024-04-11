@@ -2,7 +2,7 @@
 // Blazing Blitz
 // Written by Haider Faris 
 /*******************************************************/
-
+console.log("%c game.js", "color: blue;");
 
 //Variables
 var cooldown = 0;
@@ -26,6 +26,18 @@ function makePlatform(_length, _x, _y){
     newPlat.friction = 0;
     return (newPlat);
 }
+
+/*******************************************************/
+// preload()
+/*******************************************************/
+function preload() {
+    //Load image
+    img = loadImage('/images/face.png');
+    img2 = loadImage('images/heart.png');
+    img3 = loadImage('images/spikes.png');
+    img4 = loadImage('images/door.png');
+}
+
 /*******************************************************/
 // setup()
 /*******************************************************/
@@ -54,7 +66,6 @@ function setup(){
     littlePlat4 = makePlatform(50,200,-1400);
     littlePlat5 = makePlatform(200,0,-1500);
     
-    
     //Walls
     wallLH  = new Sprite(0, height/8, 8, height*10, 'k');
     wallLH.color = 'black';
@@ -66,9 +77,6 @@ function setup(){
     wallRH.bounciness = 0;
     wallRH.friction = 0;
     
-  
-
-
     //Trap
     trap = new Sprite(200, -125, 150, 50, 'k');
     trap.bounciness = 0;
@@ -83,10 +91,6 @@ function setup(){
     door.bounciness = 0;
     door.addImage(img4);
     
-
-    
-
-
     //Keyboard Inputs
     document.addEventListener("keydown", function(event) {
         if (event.code === 'ArrowLeft') {
@@ -110,22 +114,6 @@ function setup(){
             player.vel.x = 0; 
         }
     });
-    
-    
-    
-}
-
-   
-/*******************************************************/
-// draw()
-/*******************************************************/
-
-function preload() {
-    //Load image
-    img = loadImage('/images/face.png');
-    img2 = loadImage('images/heart.png');
-    img3 = loadImage('images/spikes.png');
-    img4 = loadImage('images/door.png');
 }
 
 document.addEventListener("keydown", playerInput);
@@ -142,6 +130,44 @@ function playerInput(event) {
             resetGame();
         }
 }
+
+document.addEventListener("keydown", playerReturn);
+function playerReturn(event) {
+    //ScreenSelector code 
+    if (keyCode == 82 && screenSelector == "end"){
+            screenSelector = "start"
+            startScreen();
+        } else if (keyCode == 82 && screenSelector == "win"){
+            screenSelector = "start"
+            resetGame();
+        }
+}
+
+function askUserName() {
+  console.log("askUserName");
+  userNameInvalid = true;
+  while (userNameInvalid) {
+    userName = prompt("What do we call you  ");
+    // If user clicks cancel stop running start function
+    if (userName == null) {
+      return;
+    }
+    // If user adds spaces delete it 
+    userName == userName.trim()
+    if (userName == "" || !isNaN(userName)) {
+      alert("Invalid username \nplease try again");
+    }
+    else {
+      // Next function 
+      userNameInvalid = false;
+    }
+  }
+  if (userName == null) {
+    return;
+  }
+}
+
+askUserName();
 
 function draw(){
     //Switching between screens 
@@ -167,9 +193,6 @@ function draw(){
     //Jump cooldown
     cooldown = cooldown + 0.01;
     //console.log(cooldown);
-    
-    
-    
 }
 
 function ifPlayerHitsTrap(_player,_trap){
@@ -201,7 +224,6 @@ function checkIfPlayerHitDoor(){
         player.remove();
         lava.remove();
     }
-
 }
 
 function checkIfPlayerHitLava(){
@@ -222,7 +244,7 @@ function startScreen(){
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Welcome to the Blazing Blits", 50, 50);
+    text("Welcome " + userName +  " to the Blazing Blits", 50, 50);
     textSize(24);
     text("Press enter to start", 50, 100);
     textSize(24);
@@ -264,8 +286,6 @@ function gameScreen(){
     camera.y = player.y;
     player.bounciness = 0;
     checkIfDead();
-
-
 }
 
 //End screen
@@ -278,7 +298,9 @@ function endScreen(){
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("You died! Press enter to try again", 50, 50);
+    text( userName +" you died! Press enter to try again", 50, 50);
+    textSize(24);
+    text("Press R to return to start screen",50, 100);
 }
 
 //Win screen
@@ -291,9 +313,11 @@ function winScreen(){
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("You won! Press enter to play again", 50, 50);
+    text( userName +" you won! Press enter to play again", 50, 50);
     textSize(24);
     text("Your time was: "+Math.floor(timeInSeconds) + " seconds",50, 100);
+    textSize(24);
+    text("Press R to return to start screen",50, 150);
 }
 
 //Reset game
@@ -311,7 +335,7 @@ function resetGame(){
     lava = new Sprite (500, 1250, 1000, 500, 'k' );
     lava.color = "red";
     lava.vel.y = -2;
-    //Refresh player and lava 
+    //Refresh game 
 }
 
 /*******************************************************/
